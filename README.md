@@ -177,7 +177,7 @@ EXPOSE 8000
 ```
 需要修改的部分：
 - FROM nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04：<span style="color:red;">关键步骤，选择的基础镜像</span>
-- ENV PATH="/ghome/liuzp/miniconda3/bin:${PATH}"：<span style="color:red;">关键步骤，将 miniconda 的 bin 目录加入 PATH</span>
+- ENV PATH="/ghome/liuzp/miniconda3/bin:${PATH}"：<span style="color:red;">关键步骤，将 miniconda 的 bin 目录加入 PATH</span>，前面提到过镜像相当于一个系统，这一步相当于告诉系统 conda 在哪里
 - 其他步骤不用改，具体含义可以问 ChatGPT
 
 准备就绪后，切换到 g101 节点，进入 dockertmp 目录，运行以下命令查看管理员是否已将所需基础镜像拉过来：
@@ -313,6 +313,44 @@ Last login: Wed Oct 30 14:36:42 2024 from 192.168.9.99
 结束正在运行的容器：
 ```shell
 (base) [liuzp@G101 ~]$ docker stop <container_id>
+```
+以交互式方式进入容器进行代码调试示例（相当于使用 startdcker 命令后手动操作 SCRIPT_FILE_PATH 里的内容）：
+```shell
+# 登录到 g101 节点
+(base) [liuzp@gwork ~]$ ssh g101
+Last login: Wed Oct 30 22:34:07 2024 from 192.168.9.99
+# 查看 gpu 使用情况
+(base) [liuzp@G101 ~]$ nvidia-smi
+...
+# 指定要用的卡号，不指定的话会随机分一张卡
+(base) [liuzp@G101 ~]$ export CUDA_VISIBLE_DEVICES="0,1"
+# 以交互式方式进入容器，在 g101 使用 startdocker 命令默认挂载了用户目录，可按需手动挂载数据目录，
+# -it 表示交互式启动，-e HOME=/ghome/liuzp 表示将用户目录设为容器中的 HOME 目录，
+# -c /bin/bash 表示启动容器后打开 bash 命令行， bit:5000/liuzp_cu111:202410 为使用的镜像名
+(base) [liuzp@G101 ~]$ startdocker -D /gdata/liuzp -u "-it -e HOME=/ghome/liuzp" -c /bin/bash bit:5000/liuzp_cu111:202410
+# 进入容器后，可以看到命令行变为：
+I have no name!@a915c03bade3:/$
+# 查看容器中都有什么
+I have no name!@a915c03bade3:/$ ls -a
+.			  bin	gdata  lib32   mnt   run   tmp
+..			  boot	ghome  lib64   opt   sbin  usr
+.dockerenv		  dev	home   libx32  proc  srv   var
+NGC-DL-CONTAINER-LICENSE  etc	lib    media   root  sys
+# 可以看到常规 Linux 系统该有的目录这里都有，而且还有挂载的用户目录 ghome 和数据目录 gdata
+# 此时可以执行一些命令检查镜像中的环境，例如：
+I have no name!@a915c03bade3:/$ nvcc -V
+I have no name!@a915c03bade3:/$ gcc -v
+I have no name!@a915c03bade3:/$ nvidia-smi
+# 要使用 conda，还需要进行初始化，运行：
+I have no name!@a915c03bade3:/$ . /ghome/liuzp/.bashrc
+# 然后就可以查看 conda 环境，运行：
+I have no name!@a915c03bade3:/$ conda env list
+# 激活 conda 环境，运行：
+I have no name!@a915c03bade3:/$ conda activate <env_name>
+# 检查 torch 版本，运行：
+(<env_name>) I have no name!@a915c03bade3:/$ python -c "import torch; print(torch.__version__)"
+# 调试代码
+(<env_name>) I have no name!@a915c03bade3:/$ python xxxx/xxx/run.py
 ```
 ### 3.2. 管理job
 查看所有 job 状态：
