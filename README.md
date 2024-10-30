@@ -263,7 +263,7 @@ SCRIPT_FILE_PATH=/ghome/liuzp/mycode/run.sh 编写如下：
 ```shell
 #!/bin/bash
 # 指定工作目录
-DIR_PATH="/ghome/liuzp/mycode/
+DIR_PATH=/ghome/liuzp/mycode/
 cd $DIR_PATH
 
 # 初始化conda
@@ -349,7 +349,7 @@ Last login: Wed Oct 30 14:36:42 2024 from 192.168.9.99
 (base) [liuzp@gwork ~]$ df -h --max-depth=1
 ```
 
-发送通知：
+发送通知：  
 注册[Sever酱](https://sct.ftqq.com/login)，获取 SendKEY，然后就可以给微信发送通知，及时获取 job 状态，使用示例：
 ```python
 def send(title: str, desp: str=''):
