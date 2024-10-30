@@ -22,7 +22,7 @@ lzp59@mail.ustc.edu.cn
 ```shell
 [liuzp@gwork ~]$
 ```
-3. 安装并配置 [Miniconda](https://docs.anaconda.com/miniconda/#quick-command-line-install)
+3. 安装并配置 [Miniconda](https://docs.anaconda.com/miniconda/#quick-command-line-install)（⬅️ wget 速度慢的话可以点这里手动下载）
 ```shell
 # installing
 mkdir -p ~/miniconda3
@@ -380,4 +380,11 @@ if __name__ == '__main__':
 ```
 
 ghome 容量不够：  
-如果 miniconda3 虚拟环境过多导致ghome容量不够，可以用软连接把虚拟环境放到 gdata 目录下，[参考教程](https://blog.csdn.net/Better_ava/article/details/134104479)
+如果 miniconda3 虚拟环境过多导致ghome容量不够，可以用软连接把虚拟环境放到 gdata 目录下，[参考教程](https://blog.csdn.net/Better_ava/article/details/134104479)  
+
+清理 conda 和 pip 缓存：
+```shell
+(base) [liuzp@gwork ~]$ conda clean -a -y
+(base) [liuzp@gwork ~]$ conda clean -p -y
+(base) [liuzp@gwork ~]$ pip cache purge
+```
