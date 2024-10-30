@@ -1,5 +1,5 @@
 # 信院集群使用教程之外挂环境
-lzp59@mail.ustc.edu.cn
+lzp59@mail.ustc.edu.cn  
 2024.10.30
 
 ## 0. 使用本教程需要的前置学习内容
@@ -45,7 +45,7 @@ base                  *  /ghome/liuzp/miniconda3
 ```
 ### 2.1. 确定需要用的 cuda、torch、python 等软件包的版本，并制作镜像和 conda 环境
 #### 2.1.1. 确定软件包版本
-这里建议首先考虑 cuda 版本，因为集群不同节点支持的 cuda 版本不同.
+这里建议首先考虑 cuda 版本，因为集群不同节点支持的 cuda 版本不同.  
 使用 ssh 登录集群，在 gwork 节点运行 chk_gpu 可以看到集群所有 job 和节点信息，[x] 表示卡被占用：
 ```shell
 (base)[liuzp@gwork ~]$ chk_gpu
@@ -122,9 +122,9 @@ Wed Oct 30 13:30:52 2024
 
 以使用 3090 为例，3090 节点中 cuda 最低为 11.2，且对应节点标识为 C，表示该节点最高支持 4 卡任务（标识符规则见[PBS文件编写部分](#22-编写pbs文件提交job)），在提交 4 卡 3090 任务时如果被分配到这个节点，我们使用的镜像中 cuda 版本就不能高于 11.2，否则会报错。
 
-以使用 4 卡 3090 为例，在确定了 cuda 版本为最高 11.2 之后，再确定 torch 版本，到 pytorch 官方仓库寻找，访问以下链接：
-https://download.pytorch.org/whl/cu112/torch
-点击发现无法访问，那就降cuda版本到11.1，再次访问：
+以使用 4 卡 3090 为例，在确定了 cuda 版本为最高 11.2 之后，再确定 torch 版本，到 pytorch 官方仓库寻找，访问以下链接：  
+https://download.pytorch.org/whl/cu112/torch  
+点击发现无法访问，那就降cuda版本到11.1，再次访问：  
 https://download.pytorch.org/whl/cu111/torch
 
 按 Ctrl+F 搜索，输入 linux，找到想要的版本，例如：
@@ -139,7 +139,7 @@ https://download.pytorch.org/whl/cu111/torch
 
 最好选带 devel 版本的
 
-然后联系管理员将镜像拉取到G101，例如：
+然后联系管理员将镜像拉取到G101，例如：  
 ![](./imgs/截屏1.png)
 
 在 ghome/username 目录下创建一个文件夹，名为 dockertmp， 在该文件夹下创建文件，名为 Dockerfile，内容如下：
@@ -198,8 +198,8 @@ bit:5000/liulei2_thop                            latest    97673c096fea   22 hou
 ```
 <image_name>:<image_tag>请自行定义
 
-编译完成后联系管理员将镜像推送到集群私有仓库，然后就可以在计算节点使用了，例如：
-![](./imgs/截屏2.png)
+编译完成后联系管理员将镜像推送到集群私有仓库，然后就可以在计算节点使用了，例如：  
+![](./imgs/截屏2.png)  
 
 #### 2.1.3. 创建conda环境
 在 gwork 或 g101 节点上，创建 conda 环境，例如：
