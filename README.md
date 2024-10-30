@@ -2,6 +2,10 @@
 lzp59@mail.ustc.edu.cn  
 2024.10.30
 
+### 更新日志
+- 添加 [PBS 文件编写](#22-编写-pbs-文件提交-job)相关内容
+- 添加 [交互式代码调试示例](#31-调试代码)示例
+
 ## 0. 使用本教程需要的前置学习内容
 1. 信院集群[使用手册](https://git.ustc.edu.cn/ypb/gpu-cluster)
 2. Conda[使用方法](https://zhuanlan.zhihu.com/p/483716942)
@@ -17,7 +21,7 @@ lzp59@mail.ustc.edu.cn
 ## 2. 使用外挂环境
 ### 2.0. 准备工作
 1. [申请集群账号](https://data-science.ustc.edu.cn/_upload/article/files/49/eb/a587f35745a6b61c69f0da271e8e/aefd6cfe-ecbf-404d-8994-fd133e7bf074.pdf)
-2. 登录集群，推荐 VS code、Xshell、WinSCP、iTerm2、FileZilla 等工具
+2. 登录集群，推荐 VS code、Xshell、WinSCP、iTerm2、FileZilla 等工具  
 登录后进入 gwork 节点，ghome/username 目录：
 ```shell
 [liuzp@gwork ~]$
@@ -218,7 +222,7 @@ bit:5000/liulei2_thop                            latest    97673c096fea   22 hou
 (<env_name>) [liuzp@gwork ~]$ pip install --no-cache-dir transformers -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 ```
 
-### 2.2. 编写PBS文件，提交job
+### 2.2. 编写 PBS 文件，提交 job
 使用 WinSCP、FileZilla 等工具将代码、数据等 copy 到 ghome、gdata 等目录，然后找个文件夹编写 PBS 文件，命名为 xxxx.pbs，内容如下：
 ```shell
 #PBS -N jobname
@@ -258,6 +262,7 @@ $IMAGE_NAME
 6. IMAGE_NAME=bit:5000/liuzp_cu111:202410：指定使用的镜像
 7. startdocker：指定挂载目录，-P 为挂载用户目录，-D 为挂载数据目录，192G 表示申请内存大小，-e HOME=/ghome/liuzp 表示将用户目录设为容器中的 HOME 目录，<span style="color:red;">把 username 都换成自己的用户名即可</span>
 8. 其他不用动，在 pbs 文件、要运行的脚本文件、python 代码中，要进行文件读写或运行文件时最好都用绝对路径
+9. ❗️❗️❗️重要：vim中编辑 pbs 文件末尾要有一个空行，如果在 VS code 中编辑，要有两个空行
 
 SCRIPT_FILE_PATH=/ghome/liuzp/mycode/run.sh 编写如下：
 ```shell
