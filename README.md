@@ -137,7 +137,7 @@ https://download.pytorch.org/whl/cu111/torch
 先上[Docker Hub](https://hub.docker.com/r/nvidia/cuda/tags)，filter tags 处输入 11.1，选择需要的镜像，例如：
 >11.1.1-cudnn8-devel-ubuntu20.04
 
-最好选带 devel 版本的
+<span style="color:red;">最好选带 devel 版本的</span>，关于 devel 版本和 runtime 版本的区别可以自行百度
 
 然后联系管理员将镜像拉取到G101，例如：  
 ![](./imgs/截屏1.png)
@@ -256,7 +256,7 @@ $IMAGE_NAME
 4. 4:C：申请的卡数和卡类型，根据 chk_gpu 查看，以 3090 为例，chk_gpu 显示Valid type: 1:A  2:B  4:C  8:F，表示如果想用一张 3090，就是 1:A，如果想用 4 张 3090，就是 4:C，以此类推
 5. SCRIPT_FILE_PATH=/ghome/liuzp/mycode/run.sh：指定运行脚本路径
 6. IMAGE_NAME=bit:5000/liuzp_cu111:202410：指定使用的镜像
-7. startdocker：指定挂载目录，-P 为挂载用户目录，-D 为挂载数据目录，192G 表示申请内存大小，-e HOME=/ghome/liuzp 表示将用户目录设为容器中的 HOME 目录，把 username 都换成自己的用户名即可
+7. startdocker：指定挂载目录，-P 为挂载用户目录，-D 为挂载数据目录，192G 表示申请内存大小，-e HOME=/ghome/liuzp 表示将用户目录设为容器中的 HOME 目录，<span style="color:red;">把 username 都换成自己的用户名即可</span>
 8. 其他不用动，在 pbs 文件、要运行的脚本文件、python 代码中，要进行文件读写或运行文件时最好都用绝对路径
 
 SCRIPT_FILE_PATH=/ghome/liuzp/mycode/run.sh 编写如下：
@@ -388,7 +388,8 @@ I have no name!@a915c03bade3:/$ conda activate <env_name>
 ```
 
 发送通知：  
-注册[Sever酱](https://sct.ftqq.com/login)，获取 SendKEY，然后就可以给微信发送通知，及时获取 job 状态，使用示例：
+注册[Sever酱](https://sct.ftqq.com/login)，获取 SendKEY，然后就可以给微信发送通知，及时获取 job 状态，有些节点会发送失败，请及时关注 out 文件  
+使用示例：
 ```python
 def send(title: str, desp: str=''):
     try:
