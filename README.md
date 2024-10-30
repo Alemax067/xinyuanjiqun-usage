@@ -350,7 +350,7 @@ Last login: Wed Oct 30 14:36:42 2024 from 192.168.9.99
 ```
 
 发送通知：
-注册[Sever酱](https://sct.ftqq.com/login)，获取SendKEY，然后就可以给微信发送通知，及时获取 job 状态，使用示例：
+注册[Sever酱](https://sct.ftqq.com/login)，获取 SendKEY，然后就可以给微信发送通知，及时获取 job 状态，使用示例：
 ```python
 def send(title: str, desp: str=''):
     try:
@@ -378,3 +378,6 @@ if __name__ == '__main__':
         send(title=f"Failed train job", desp='<job name>')
         exit()
 ```
+
+ghome 容量不够：  
+如果 miniconda3 虚拟环境过多导致ghome容量不够，可以用软连接把虚拟环境放到 gdata 目录下，[参考教程](https://blog.csdn.net/Better_ava/article/details/134104479)
