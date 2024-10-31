@@ -3,6 +3,7 @@ lzp59@mail.ustc.edu.cn
 2024.10.30
 
 ### 更新日志
+- [创建 conda 环境](#213-创建-conda-环境)增加了一些内容
 - 添加 [pip 换源](#pip换源)实用命令
 - 添加 Miniconda 安装[相关提醒](#️注意)
 - 添加 [PBS 文件编写](#22-编写-pbs-文件提交-job)相关内容
@@ -213,7 +214,7 @@ bit:5000/liulei2_thop                            latest    97673c096fea   22 hou
 编译完成后联系管理员将镜像推送到集群私有仓库，然后就可以在计算节点使用了，例如：  
 ![](./imgs/截屏2.png)  
 
-#### 2.1.3. 创建conda环境
+#### 2.1.3. 创建 conda 环境
 在 gwork 或 g101 节点上，创建 conda 环境，例如：
 ```shell
 (base) [liuzp@gwork ~]$ conda create -n <env_name> python=3.9 -y
@@ -228,7 +229,8 @@ bit:5000/liulei2_thop                            latest    97673c096fea   22 hou
 ```
 ```shell
 (<env_name>) [liuzp@gwork ~]$ pip install --no-cache-dir transformers -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
-```
+```  
+如果需要依赖 cuda 等进行编译安装，可以在 g101 以交互式方式进入容器，然后在容器内激活环境进行编译安装，最后退出容器即可。集群不保存用户对镜像本身的修改，但是这样安装的软件包会保存在 ghome/username/miniconda3/envs, 具体操作过程类似于[交互式调试代码](#以交互式方式进入容器进行代码调试示例相当于使用-startdcker-命令后手动操作-script_file_path-里的内容)  
 
 ### 2.2. 编写 PBS 文件，提交 job
 使用 WinSCP、FileZilla 等工具将代码、数据等 copy 到 ghome、gdata 等目录，然后找个文件夹编写 PBS 文件，命名为 xxxx.pbs，内容如下：
