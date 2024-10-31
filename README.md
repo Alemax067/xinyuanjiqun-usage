@@ -3,8 +3,10 @@ lzp59@mail.ustc.edu.cn
 2024.10.30
 
 ### 更新日志
+- 添加 [pip 换源](#pip换源)实用命令
+- 添加 Miniconda 安装[相关提醒](#️注意)
 - 添加 [PBS 文件编写](#22-编写-pbs-文件提交-job)相关内容
-- 添加 [交互式代码调试示例](#31-调试代码)
+- 添加 [交互式代码调试示例](#以交互式方式进入容器进行代码调试示例相当于使用-startdcker-命令后手动操作-script_file_path-里的内容)
 
 ## 0. 使用本教程需要的前置学习内容
 1. 信院集群[使用手册](https://git.ustc.edu.cn/ypb/gpu-cluster)
@@ -26,7 +28,9 @@ lzp59@mail.ustc.edu.cn
 ```shell
 [liuzp@gwork ~]$
 ```
-3. 安装并配置 [Miniconda](https://docs.anaconda.com/miniconda/#quick-command-line-install)（⬅️ wget 速度慢的话可以点这里手动下载）
+3. 安装并配置 [Miniconda](https://docs.anaconda.com/miniconda/#quick-command-line-install)（⬅️ wget 速度慢的话可以点这里手动下载）  
+
+下面是 Miniconda 官网给出的安装命令：
 ```shell
 # installing
 mkdir -p ~/miniconda3
@@ -47,6 +51,10 @@ conda init --all
 #
 base                  *  /ghome/liuzp/miniconda3
 ```
+##### ⚠️注意：  
+上面的安装命令会把 Miniconda3 安装到 ghome 目录里，但是 ghome 目录限额 50G，所以建议把 Miniconda3 直接安装到 gdata 目录里，注意在后面 Dockerfile 中需要使用 Miniconda 的实际安装目录，当然也可以通过软连接在 ghome 生成一个 gdata/username/miniconda3 的快捷方式，这样就可以在 Dockerfile 中直接使用 /ghome/username/miniconda3 了。  
+
+如果 Miniconda3 已经安装在了 ghome 目录里，可以[参考这里](#ghome-容量不够)，但要注意解压缩会很慢。
 ### 2.1. 确定需要用的 cuda、torch、python 等软件包的版本，并制作镜像和 conda 环境
 #### 2.1.1. 确定软件包版本
 这里建议首先考虑 cuda 版本，因为集群不同节点支持的 cuda 版本不同.  
@@ -291,35 +299,35 @@ python run.py
 
 ## 3. 其他
 ### 3.1. 调试代码
-在 g101 节点上调试代码
+##### 在 g101 节点上调试代码
 ```shell
 (base) [liuzp@gwork ~]$ ssh g101
 Last login: Wed Oct 30 14:36:42 2024 from 192.168.9.99
 (base) [liuzp@G101 ~]$
 ```
-使用 nvidia-smi 查看卡的使用情况
+##### 使用 nvidia-smi 查看卡的使用情况
 
-查看当前可见的显卡：
+##### 查看当前可见的显卡：
 ```shell
 (base) [liuzp@G101 ~]$ echo $CUDA_VISIBLE_DEVICES
 ```
-指定要用的卡号：
+##### 指定要用的卡号：
 ```shell
 (base) [liuzp@G101 ~]$ export CUDA_VISIBLE_DEVICES="0,1"
 ```
-调试代码，其实就是pbs文件的 startdocker 命令直接运行：
+##### 调试代码，其实就是pbs文件的 startdocker 命令直接运行：
 ```shell
 (base) [liuzp@G101 ~]$ startdocker -P /ghome/liuzp -D /gdata/liuzp -u "--ipc=host --shm-size 64G -e HOME=/ghome/liuzp" -s /ghome/liuzp/mycode/run.sh bit:5000/liuzp_cu111:202410
 ```
-查看正在运行的容器以及获取容器 id：
+##### 查看正在运行的容器以及获取容器 id：
 ```shell
 (base) [liuzp@G101 ~]$ docker ps -a
 ```
-结束正在运行的容器：
+##### 结束正在运行的容器：
 ```shell
 (base) [liuzp@G101 ~]$ docker stop <container_id>
 ```
-以交互式方式进入容器进行代码调试示例（相当于使用 startdcker 命令后手动操作 SCRIPT_FILE_PATH 里的内容）：
+##### 以交互式方式进入容器进行代码调试示例（相当于使用 startdcker 命令后手动操作 SCRIPT_FILE_PATH 里的内容）：
 ```shell
 # 登录到 g101 节点
 (base) [liuzp@gwork ~]$ ssh g101
@@ -358,41 +366,41 @@ I have no name!@a915c03bade3:/$ conda activate <env_name>
 (<env_name>) I have no name!@a915c03bade3:/$ python xxxx/xxx/run.py
 ```
 ### 3.2. 管理job
-查看所有 job 状态：
+##### 查看所有 job 状态：
 ```shell
 (base) [liuzp@gwork ~]$ chk_gpu
 ```
-查看自己的 job 状态：
+##### 查看自己的 job 状态：
 ```shell
 (base) [liuzp@gwork ~]$ qstat -u $USER
 ```
-结束 job：
+##### 结束 job：
 ```shell
 (base) [liuzp@gwork ~]$ qdel <job_id>
 ```
-查看节点 cpu 负载：
+##### 查看节点 cpu 负载：
 ```shell
 (base) [liuzp@gwork ~]$ sudo chk_res <结点名>
 ```
-查看 job 的实时 log 输出：
+##### 查看 job 的实时 log 输出：
 ```shell
 (base) [liuzp@gwork ~]$ dockerlog <jobid> 
 ```
-查看卡时：
+##### 查看卡时：
 ```shell
 (base) [liuzp@gwork ~]$ sudo get_report
 ```
 ### 3.3. 实用命令
-查看私有仓库所有镜像：
+##### 查看私有仓库所有镜像：
 ```shell
 (base) [liuzp@gwork ~]$ getallreposimages
 ```
-查询磁盘使用情况：
+##### 查询磁盘使用情况：
 ```shell
 (base) [liuzp@gwork ~]$ df -h --max-depth=1
 ```
 
-发送通知：  
+##### 发送通知：  
 注册[Sever酱](https://sct.ftqq.com/login)，获取 SendKEY，然后就可以给微信发送通知，及时获取 job 状态，有些节点会发送失败，请及时关注 out 文件  
 使用示例：
 ```python
@@ -423,12 +431,25 @@ if __name__ == '__main__':
         exit()
 ```
 
-ghome 容量不够：  
-如果 miniconda3 虚拟环境过多导致ghome容量不够，可以用软连接把虚拟环境放到 gdata 目录下，[参考教程](https://blog.csdn.net/Better_ava/article/details/134104479)  
+##### ghome 容量不够：  
+如果 miniconda3 虚拟环境过多导致ghome容量不够，可以用软连接把虚拟环境放到 gdata 目录下，[参考教程](https://blog.csdn.net/Better_ava/article/details/134104479)    
 
-清理 conda 和 pip 缓存：
+##### 清理 conda 和 pip 缓存：
 ```shell
 (base) [liuzp@gwork ~]$ conda clean -a -y
 (base) [liuzp@gwork ~]$ conda clean -p -y
 (base) [liuzp@gwork ~]$ pip cache purge
+# 使用 pip 时直接加上 --no-cache-dir 参数，例如：
+(<env_name>) [liuzp@gwork ~]$ pip install --no-cache-dir xxx
+```
+
+##### pip换源：
+```shell
+# 临时换源
+pip install torch==1.10.2+cu111 -i https://download.pytorch.org/whl/cu111
+pip install transformers -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+# 永久换源
+pip install -i https://mirrors.ustc.edu.cn/pypi/simple pip -U
+pip config set global.index-url https://mirrors.ustc.edu.cn/pypi/simple
+# 其他源如阿里、豆瓣等可自行搜索
 ```
