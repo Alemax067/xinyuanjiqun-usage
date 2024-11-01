@@ -3,6 +3,7 @@ lzp59@mail.ustc.edu.cn
 2024.10.30
 
 ### 更新日志
+- 更新[磁盘使用情况统计](#统计所有文件文件夹大小-包含隐藏的文件)命令
 - [创建 conda 环境](#213-创建-conda-环境)增加了一些内容
 - 添加 [pip 换源](#pip换源)实用命令
 - 添加 Miniconda 安装[相关提醒](#️注意)
@@ -25,6 +26,7 @@ lzp59@mail.ustc.edu.cn
 ### 2.0. 准备工作
 1. [申请集群账号](https://data-science.ustc.edu.cn/_upload/article/files/49/eb/a587f35745a6b61c69f0da271e8e/aefd6cfe-ecbf-404d-8994-fd133e7bf074.pdf)
 2. 登录集群，推荐 VS code、Xshell、WinSCP、iTerm2、FileZilla 等工具  
+
 登录后进入 gwork 节点，ghome/username 目录：
 ```shell
 [liuzp@gwork ~]$
@@ -133,7 +135,7 @@ Wed Oct 30 13:30:52 2024
 >A40   
 全为 12.4  
 
-以使用 3090 为例，3090 节点中 cuda 最低为 11.2，且对应节点标识为 C，表示该节点最高支持 4 卡任务（标识符规则见[PBS文件编写部分](#22-编写pbs文件提交job)），在提交 4 卡 3090 任务时如果被分配到这个节点，我们使用的镜像中 cuda 版本就不能高于 11.2，否则会报错。
+以使用 3090 为例，3090 节点中 cuda 最低为 11.2，且对应节点标识为 C，表示该节点最高支持 4 卡任务（标识符规则见[PBS文件编写部分](#22-编写-pbs-文件提交-job)），在提交 4 卡 3090 任务时如果被分配到这个节点，我们使用的镜像中 cuda 版本就不能高于 11.2，否则会报错。
 
 以使用 4 卡 3090 为例，在确定了 cuda 版本为最高 11.2 之后，再确定 torch 版本，到 pytorch 官方仓库寻找，访问以下链接：  
 https://download.pytorch.org/whl/cu112/torch  
@@ -397,9 +399,9 @@ I have no name!@a915c03bade3:/$ conda activate <env_name>
 ```shell
 (base) [liuzp@gwork ~]$ getallreposimages
 ```
-##### 查询磁盘使用情况：
+##### 统计所有文件/文件夹大小 （包含隐藏的文件）:
 ```shell
-(base) [liuzp@gwork ~]$ df -h --max-depth=1
+(base) [liuzp@gwork ~]$ du -sh .[!.]* * | sort -hr
 ```
 
 ##### 发送通知：  
